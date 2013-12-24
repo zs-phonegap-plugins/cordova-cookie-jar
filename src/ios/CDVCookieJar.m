@@ -7,6 +7,14 @@
     NSString *domain = (NSString*) [cdvCommand.arguments objectAtIndex:0];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:[NSString stringWithFormat:@"cdvCookieJar:@%@", domain]];
+    
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies]) {
+        if ([cookie.domain isEqualToString:domain]) {
+            [storage deleteCookie:cookie];
+        }
+    }
 }
 
 - (void) storeCookiesForDomain:(CDVInvokedUrlCommand*)cdvCommand
